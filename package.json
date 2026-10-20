@@ -1,5 +1,5 @@
 {
-  "author": "Farizh (neartana)",
+  "author": "neartana",
   "bin": {
     "frame-note": "bin/install.js"
   },
