@@ -1,5 +1,6 @@
 <p align="center">
-  <h1 align="center">🎬 FrameNote</h1>
+  <img src="assets/logo.webp" width="160" alt="FrameNote logo">
+  <h1 align="center">🎞️ FrameNote</h1>
   <p align="center">An AI agent skill for <i>watching</i> videos &amp; reels — without ever playing a video.</p>
   <p align="center">
     <a href="https://github.com/neartana/frame-note/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-2f2f2f.svg?style=flat-square" alt="MIT license"></a>
