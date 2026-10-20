@@ -1,0 +1,39 @@
+{
+  "author": "Farizh (neartana)",
+  "bin": {
+    "video-watcher": "bin/install.js"
+  },
+  "bugs": {
+    "url": "https://github.com/neartana/video-watcher/issues"
+  },
+  "description": "An AI agent skill for watching videos & reels — download via self-hosted Cobalt, extract frames, read them, save a Markdown note, delete the video.",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin/install.js",
+    "scripts/watch_video.py",
+    "SKILL.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "homepage": "https://github.com/neartana/video-watcher#readme",
+  "keywords": [
+    "ai-agent",
+    "skill",
+    "video",
+    "cobalt",
+    "ffmpeg",
+    "reels",
+    "claude",
+    "muse"
+  ],
+  "license": "MIT",
+  "name": "video-watcher",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neartana/video-watcher.git"
+  },
+  "version": "1.0.0",
+  "type": "module"
+}

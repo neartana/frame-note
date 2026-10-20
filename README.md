@@ -1,85 +1,128 @@
-# Video Watcher
+<p align="center">
+  <h1 align="center">🎬 Video Watcher</h1>
+  <p align="center">An AI agent skill for <i>watching</i> videos &amp; reels — without ever playing a video.</p>
+  <p align="center">
+    <a href="https://github.com/neartana/video-watcher/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-2f2f2f.svg?style=flat-square" alt="MIT license"></a>
+    <img src="https://img.shields.io/badge/python-3.8%2B-3776AB.svg?style=flat-square&logo=python&logoColor=white" alt="Python 3.8+">
+    <img src="https://img.shields.io/badge/node-%3E%3D18-3C873A.svg?style=flat-square&logo=node.js&logoColor=white" alt="Node 18+">
+    <img src="https://img.shields.io/badge/install-npx-informational?style=flat-square&logo=npm" alt="Install with npx">
+  </p>
+</p>
 
-A Muse / AI agent skill for "watching" videos and reels — without actually playing video.
+Your agent can't play video or hear audio. **Video Watcher is the workaround:**
+download the video, slice it into frames, let the agent *read* the frames,
+then save the reading as a Markdown note — and delete the video so only the
+notes remain.
 
-The agent can't play video or hear audio, so this skill is a workaround:
+## ✨ Install
 
-1. **Download** the video with a self-hosted [Cobalt](https://github.com/imputnet/cobalt) API (no yt-dlp, no third-party downloader sites)
-2. **Extract frames** as images with `ffmpeg` and read them
-3. **Save the reading** as a Markdown note (`analysis.md`)
-4. **Delete** the downloaded video, frames, and audio — only the `.md` note stays
-
-## Why?
-
-Useful when you send a link to a reel/video and ask:
-- What happens in this video?
-- What app/product is shown?
-- What text appears on screen?
-
-## Requirements
-
-- Python 3
-- `ffmpeg` + `ffprobe`
-- Node.js (for Cobalt)
-- [Cobalt](https://github.com/imputnet/cobalt) source cloned locally
-
-The script expects Cobalt at:
-```
-~/workspace/tools/cobalt-src/api
-```
-and serves it at `http://localhost:9000/` — it auto-starts Cobalt if it's down. The public `api.cobalt.tools` now requires a JWT, which is why it's self-hosted.
-
-Adjust `COBALT_API` / `COBALT_API_DIR` in `scripts/watch_video.py` if your paths differ.
-
-## Usage
+Pick one — both do the same thing:
 
 ```bash
-# 1. Download via Cobalt + extract frames (prints JSON manifest)
-python3 scripts/watch_video.py get '<video-url-or-local-file>' [--max-frames 20]
+# Option A: via the skills CLI (Muse, Claude Code, Cursor, …)
+npx skills add neartana/video-watcher
 
-# 2. Agent reads every frame image and writes <workdir>/analysis.md
+# Option B: direct installer, no skills CLI needed
+npx github:neartana/video-watcher
+```
 
-# 3. Finalize: saves analysis.md to the notes library, deletes the run dir
+Then check it landed:
+
+```bash
+ls ~/.agents/skills/video-watcher   # or ~/.claude/skills/video-watcher
+```
+
+## 🧠 How it works
+
+```mermaid
+flowchart LR
+    A[You send a video link] --> B[Download via self-hosted Cobalt]
+    B --> C[Extract frames with ffmpeg]
+    C --> D[Agent reads the frames]
+    D --> E[Write <code>analysis.md</code>]
+    E --> F[Delete video + frames — only the note stays]
+```
+
+| Step | What happens |
+| ---- | ------------ |
+| **1. `get`** | Download via local Cobalt API, extract ~20 evenly-spread frames + `audio.mp3` |
+| **2. read** | The agent opens every frame and notes what it sees, with timestamps |
+| **3. `finalize`** | `analysis.md` is filed into the notes library; the run dir (video, frames, audio) is deleted |
+
+```bash
+# 1. download + extract frames (prints a JSON manifest)
+python3 scripts/watch_video.py get 'https://www.instagram.com/reel/…' --max-frames 20
+
+# 2. agent reads the frames, writes <workdir>/analysis.md
+
+# 3. file the note, wipe the video
 python3 scripts/watch_video.py finalize <workdir>
 ```
 
-`get` defaults to up to 20 frames spread evenly, plus `audio.mp3` when a track exists.
-
-Notes library: `~/workspace/video-watcher/notes/*.md`
-Temporary runs: `~/workspace/video-watcher/runs/run-<timestamp>/` (deleted on finalize)
-
-### analysis.md structure
+Every run produces a note like this:
 
 ```md
-# <title or short description>
-- Source: <original URL>
-- Creator: <if known>
-- Duration: <seconds>
-- Read on: <date>
+# Leer manga con MeikiPop
+- Source: https://www.instagram.com/reel/DesD1VMzb3Q/
+- Duration: 42.5s · Read on: 2026-10-20
 
 ## What happens
-<frame-by-frame / scene summary with timestamps>
+0.0s — Phone screen shows a manga reader app…
+…
 
 ## On-screen text
-<verbatim text seen in frames>
+"LEER MANGA CON MEIKIPOP"
 
 ## Apps / products / brands identified
-<with the frame timestamp that shows each>
-
-## Not covered
-<audio-only content, unclear frames, anything unverified>
+MeikiPop — visible at 0.0s
 ```
 
-## Install as a Muse Skill
+## 📦 Requirements
 
-Copy this folder to your Muse custom skills directory:
+| Tool | Why | Notes |
+| ---- | --- | ----- |
+| Python 3.8+ | runs `watch_video.py` | stdlib only — no pip packages needed |
+| `ffmpeg` + `ffprobe` | frame extraction, duration probing | `brew install ffmpeg` / `apt install ffmpeg` |
+| Node 18+ | runs the Cobalt server | only needed for URL downloads |
+| Cobalt (self-hosted) | turns page links into direct video URLs | `imputnet/cobalt` — the public `api.cobalt.tools` now requires a JWT |
 
-```bash
-cp -r video-watcher ~/workspace/custom-skills/video-watcher
-```
+The script looks for Cobalt source at `~/workspace/tools/cobalt-src/api` and
+serves it at `http://localhost:9000/`, auto-starting it if it's down.
+Point it elsewhere with `VIDEO_WATCHER_COBALT_DIR`.
 
-Then it will be picked up as the `video-watcher` skill — see `SKILL.md` for the agent instructions.
+## ⚙️ Configuration
 
-## License
+All paths can be overridden with environment variables; defaults just work
+on a fresh install.
 
-MIT
+| Variable | Default | Purpose |
+| -------- | ------- | ------- |
+| `VIDEO_WATCHER_HOME` | `~/workspace/video-watcher` | runs/ + notes/ library root |
+| `VIDEO_WATCHER_COBALT_DIR` | `~/workspace/tools/cobalt-src/api` | Cobalt API source dir |
+| `VIDEO_WATCHER_COBALT_URL` | `http://localhost:9000/` | Cobalt API endpoint |
+
+Notes library: `$VIDEO_WATCHER_HOME/notes/*.md` — permanent.
+Temporary runs: `$VIDEO_WATCHER_HOME/runs/run-<timestamp>/` — deleted on finalize.
+
+> ⚠️ Never run `finalize` before `analysis.md` exists — it deletes the only
+> copy of the video.
+
+## 🔍 What it's good at — and not
+
+**Good at**
+- "What happens in this reel?"
+- "What app/product is shown on screen?"
+- "What text appears in the video?"
+
+**Not**
+- Audio-only content (frames ≠ watching; the skill says so honestly)
+- Cobalt-unsupported links — the error is reported plainly, then the
+  fallback chain is: platform connector → live browser → ask for the file
+
+## 📄 License
+
+[MIT](LICENSE) — do whatever you want with it.
+
+---
+
+<p align="center">Built for <a href="https://muse.ai">Muse</a> agents. If it helped you, a ⭐ is the cheapest thank-you.</p>

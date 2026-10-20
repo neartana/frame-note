@@ -13,6 +13,7 @@ analysis.md itself. The cobalt API server is self-hosted on this machine
 """
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -21,10 +22,13 @@ import urllib.request
 import urllib.error
 from pathlib import Path
 
-COBALT_API = "http://localhost:9000/"
-COBALT_API_DIR = Path.home() / "workspace" / "tools" / "cobalt-src" / "api"
-RUNS_DIR = Path.home() / "workspace" / "video-watcher" / "runs"
-NOTES_DIR = Path.home() / "workspace" / "video-watcher" / "notes"
+_HOME = Path(os.environ.get("VIDEO_WATCHER_HOME", Path.home() / "workspace" / "video-watcher"))
+COBALT_API = os.environ.get("VIDEO_WATCHER_COBALT_URL", "http://localhost:9000/")
+COBALT_API_DIR = Path(os.environ.get(
+    "VIDEO_WATCHER_COBALT_DIR",
+    Path.home() / "workspace" / "tools" / "cobalt-src" / "api"))
+RUNS_DIR = _HOME / "runs"
+NOTES_DIR = _HOME / "notes"
 
 
 def sh(cmd, **kw):
