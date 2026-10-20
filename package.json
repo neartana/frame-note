@@ -1,10 +1,10 @@
 {
   "author": "Farizh (neartana)",
   "bin": {
-    "video-watcher": "bin/install.js"
+    "frame-note": "bin/install.js"
   },
   "bugs": {
-    "url": "https://github.com/neartana/video-watcher/issues"
+    "url": "https://github.com/neartana/frame-note/issues"
   },
   "description": "An AI agent skill for watching videos & reels — download via self-hosted Cobalt, extract frames, read them, save a Markdown note, delete the video.",
   "engines": {
@@ -17,7 +17,7 @@
     "README.md",
     "LICENSE"
   ],
-  "homepage": "https://github.com/neartana/video-watcher#readme",
+  "homepage": "https://github.com/neartana/frame-note#readme",
   "keywords": [
     "ai-agent",
     "skill",
@@ -29,10 +29,10 @@
     "muse"
   ],
   "license": "MIT",
-  "name": "video-watcher",
+  "name": "frame-note",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neartana/video-watcher.git"
+    "url": "git+https://github.com/neartana/frame-note.git"
   },
   "version": "1.0.0",
   "type": "module"

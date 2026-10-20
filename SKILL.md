@@ -1,4 +1,4 @@
-# Video Watcher ("watching" a video or reel)
+# FrameNote ("watching" a video or reel)
 
 Use when the user asks what happens in a video/reel, what app/product is shown,
 what text appears, or any question about a video they link or upload — and the
@@ -24,12 +24,12 @@ All paths are relative to this skill's own folder (`<skill-dir>`):
   The script auto-starts it if it is down. Manual start if needed:
   `cd <cobalt-api-dir> && API_PORT=9000 API_URL='http://localhost:9000/' node src/cobalt.js`
   (The public api.cobalt.tools now requires a JWT, which is why it is self-hosted.)
-- Runs: `$VIDEO_WATCHER_HOME/runs/run-<ts>/` (temporary, default home
-  `~/workspace/video-watcher`)
-- Notes library: `$VIDEO_WATCHER_HOME/notes/*.md` (permanent)
+- Runs: `$FRAMENOTE_HOME/runs/run-<ts>/` (temporary, default home
+  `~/workspace/frame-note`)
+- Notes library: `$FRAMENOTE_HOME/notes/*.md` (permanent)
 
-Environment overrides: `VIDEO_WATCHER_HOME`, `VIDEO_WATCHER_COBALT_DIR`,
-`VIDEO_WATCHER_COBALT_URL`.
+Environment overrides: `FRAMENOTE_HOME`, `FRAMENOTE_COBALT_DIR`,
+`FRAMENOTE_COBALT_URL`.
 
 ## Flow
 

@@ -22,11 +22,18 @@ import urllib.request
 import urllib.error
 from pathlib import Path
 
-_HOME = Path(os.environ.get("VIDEO_WATCHER_HOME", Path.home() / "workspace" / "video-watcher"))
-COBALT_API = os.environ.get("VIDEO_WATCHER_COBALT_URL", "http://localhost:9000/")
-COBALT_API_DIR = Path(os.environ.get(
-    "VIDEO_WATCHER_COBALT_DIR",
-    Path.home() / "workspace" / "tools" / "cobalt-src" / "api"))
+def _env(*names, default=None):
+    for n in names:
+        if n in os.environ and os.environ[n]:
+            return os.environ[n]
+    return default
+
+_HOME = Path(_env("FRAMENOTE_HOME", "VIDEO_WATCHER_HOME",
+                  default=Path.home() / "workspace" / "frame-note"))
+COBALT_API = _env("FRAMENOTE_COBALT_URL", "VIDEO_WATCHER_COBALT_URL",
+                  default="http://localhost:9000/")
+COBALT_API_DIR = Path(_env("FRAMENOTE_COBALT_DIR", "VIDEO_WATCHER_COBALT_DIR",
+                            default=Path.home() / "workspace" / "tools" / "cobalt-src" / "api"))
 RUNS_DIR = _HOME / "runs"
 NOTES_DIR = _HOME / "notes"
 

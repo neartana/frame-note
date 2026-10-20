@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-// video-watcher installer — copies the skill into your agent's skills folder.
+// frame-note installer — copies the skill into your agent's skills folder.
 // Usage:
-//   npx github:neartana/video-watcher [--dir <path>] [--agent <name>] [--local]
-//   npx video-watcher [--dir <path>] ...
+//   npx github:neartana/frame-note [--dir <path>] [--agent <name>] [--local]
+//   npx frame-note [--dir <path>] ...
 //
 // Targets:
-//   --dir <path>        install exactly into <path>/video-watcher
-//   --agent claude      ~/.claude/skills/video-watcher
-//   --agent cursor      ~/.cursor/skills/video-watcher
-//   --agent agents      ~/.agents/skills/video-watcher   (skills CLI default)
-//   --local             ./.agents/skills/video-watcher  (per-project)
+//   --dir <path>        install exactly into <path>/frame-note
+//   --agent claude      ~/.claude/skills/frame-note
+//   --agent cursor      ~/.cursor/skills/frame-note
+//   --agent agents      ~/.agents/skills/frame-note   (skills CLI default)
+//   --local             ./.agents/skills/frame-note  (per-project)
 //   (no flag)           ~/.agents/skills if present, else ~/.claude/skills
 import { cpSync, existsSync, mkdirSync, chmodSync } from "node:fs";
 import { homedir } from "node:os";
@@ -24,11 +24,11 @@ function flag(name) {
   return i >= 0 ? args[i + 1] : null;
 }
 if (args.includes("--help") || args.includes("-h")) {
-  console.log(`video-watcher installer
+  console.log(`frame-note installer
 
-  npx github:neartana/video-watcher [--dir <path>] [--agent <claude|cursor|agents>] [--local]
+  npx github:neartana/frame-note [--dir <path>] [--agent <claude|cursor|agents>] [--local]
 
-Copies SKILL.md + scripts/ into <skills-dir>/video-watcher.
+Copies SKILL.md + scripts/ into <skills-dir>/frame-note.
 Requirements at runtime: python3, ffmpeg, node, a self-hosted Cobalt checkout.`);
   process.exit(0);
 }
@@ -53,7 +53,7 @@ if (dirFlag) {
     : join(home, ".claude", "skills");
 }
 
-const dest = join(skillsDir, "video-watcher");
+const dest = join(skillsDir, "frame-note");
 mkdirSync(join(dest, "scripts"), { recursive: true });
 for (const f of ["SKILL.md", "README.md", "LICENSE"]) {
   cpSync(join(root, f), join(dest, f));
@@ -61,9 +61,9 @@ for (const f of ["SKILL.md", "README.md", "LICENSE"]) {
 cpSync(join(root, "scripts", "watch_video.py"), join(dest, "scripts", "watch_video.py"));
 try { chmodSync(join(dest, "scripts", "watch_video.py"), 0o755); } catch {}
 
-console.log(`✅ video-watcher installed → ${dest}
+console.log(`✅ frame-note installed → ${dest}
 Next steps:
   1. Make sure python3, ffmpeg/ffprobe and node are on PATH.
   2. Clone Cobalt for URL downloads:  git clone https://github.com/imputnet/cobalt
-     (or set VIDEO_WATCHER_COBALT_DIR to your Cobalt api/ folder)
+     (or set FRAMENOTE_COBALT_DIR to your Cobalt api/ folder)
   3. Ask your agent about a video link — the skill takes it from there.`);

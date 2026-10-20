@@ -1,15 +1,15 @@
 <p align="center">
-  <h1 align="center">🎬 Video Watcher</h1>
+  <h1 align="center">🎬 FrameNote</h1>
   <p align="center">An AI agent skill for <i>watching</i> videos &amp; reels — without ever playing a video.</p>
   <p align="center">
-    <a href="https://github.com/neartana/video-watcher/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-2f2f2f.svg?style=flat-square" alt="MIT license"></a>
+    <a href="https://github.com/neartana/frame-note/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-2f2f2f.svg?style=flat-square" alt="MIT license"></a>
     <img src="https://img.shields.io/badge/python-3.8%2B-3776AB.svg?style=flat-square&logo=python&logoColor=white" alt="Python 3.8+">
     <img src="https://img.shields.io/badge/node-%3E%3D18-3C873A.svg?style=flat-square&logo=node.js&logoColor=white" alt="Node 18+">
     <img src="https://img.shields.io/badge/install-npx-informational?style=flat-square&logo=npm" alt="Install with npx">
   </p>
 </p>
 
-Your agent can't play video or hear audio. **Video Watcher is the workaround:**
+Your agent can't play video or hear audio. **FrameNote is the workaround:**
 download the video, slice it into frames, let the agent *read* the frames,
 then save the reading as a Markdown note — and delete the video so only the
 notes remain.
@@ -20,16 +20,16 @@ Pick one — both do the same thing:
 
 ```bash
 # Option A: via the skills CLI (Muse, Claude Code, Cursor, …)
-npx skills add neartana/video-watcher
+npx skills add neartana/frame-note
 
 # Option B: direct installer, no skills CLI needed
-npx github:neartana/video-watcher
+npx github:neartana/frame-note
 ```
 
 Then check it landed:
 
 ```bash
-ls ~/.agents/skills/video-watcher   # or ~/.claude/skills/video-watcher
+ls ~/.agents/skills/frame-note   # or ~/.claude/skills/frame-note
 ```
 
 ## 🧠 How it works
@@ -88,7 +88,7 @@ MeikiPop — visible at 0.0s
 
 The script looks for Cobalt source at `~/workspace/tools/cobalt-src/api` and
 serves it at `http://localhost:9000/`, auto-starting it if it's down.
-Point it elsewhere with `VIDEO_WATCHER_COBALT_DIR`.
+Point it elsewhere with `FRAMENOTE_COBALT_DIR`.
 
 ## ⚙️ Configuration
 
@@ -97,12 +97,12 @@ on a fresh install.
 
 | Variable | Default | Purpose |
 | -------- | ------- | ------- |
-| `VIDEO_WATCHER_HOME` | `~/workspace/video-watcher` | runs/ + notes/ library root |
-| `VIDEO_WATCHER_COBALT_DIR` | `~/workspace/tools/cobalt-src/api` | Cobalt API source dir |
-| `VIDEO_WATCHER_COBALT_URL` | `http://localhost:9000/` | Cobalt API endpoint |
+| `FRAMENOTE_HOME` | `~/workspace/frame-note` | runs/ + notes/ library root |
+| `FRAMENOTE_COBALT_DIR` | `~/workspace/tools/cobalt-src/api` | Cobalt API source dir |
+| `FRAMENOTE_COBALT_URL` | `http://localhost:9000/` | Cobalt API endpoint |
 
-Notes library: `$VIDEO_WATCHER_HOME/notes/*.md` — permanent.
-Temporary runs: `$VIDEO_WATCHER_HOME/runs/run-<timestamp>/` — deleted on finalize.
+Notes library: `$FRAMENOTE_HOME/notes/*.md` — permanent.
+Temporary runs: `$FRAMENOTE_HOME/runs/run-<timestamp>/` — deleted on finalize.
 
 > ⚠️ Never run `finalize` before `analysis.md` exists — it deletes the only
 > copy of the video.
