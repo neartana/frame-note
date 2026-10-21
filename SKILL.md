@@ -1,3 +1,8 @@
+---
+name: frame-note
+description: "Watch a video or reel for an agent that cannot play video: download it via a self-hosted Cobalt API, extract frames with ffmpeg, read the frames, save the reading as a Markdown note, and delete the video. Includes a no-login headless-Chromium fallback for Instagram reels Cobalt only answers with a photo. Use when the user asks what happens in a video/reel, what app, product or text appears in it, or sends a video link or file to be read."
+---
+
 # FrameNote ("watching" a video or reel)
 
 Use when the user asks what happens in a video/reel, what app/product is shown,
