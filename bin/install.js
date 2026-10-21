@@ -60,10 +60,14 @@ for (const f of ["SKILL.md", "README.md", "LICENSE"]) {
 }
 cpSync(join(root, "scripts", "watch_video.py"), join(dest, "scripts", "watch_video.py"));
 try { chmodSync(join(dest, "scripts", "watch_video.py"), 0o755); } catch {}
+cpSync(join(root, "scripts", "ig_nologin_fetch.py"), join(dest, "scripts", "ig_nologin_fetch.py"));
+try { chmodSync(join(dest, "scripts", "ig_nologin_fetch.py"), 0o755); } catch {}
 
 console.log(`✅ frame-note installed → ${dest}
 Next steps:
   1. Make sure python3, ffmpeg/ffprobe and node are on PATH.
+     (Optional, for the no-login Instagram fallback: a Chrome/Chromium
+     binary — set CHROME_PATH if it isn't on PATH.)
   2. Clone Cobalt for URL downloads:  git clone https://github.com/imputnet/cobalt
      (or set FRAMENOTE_COBALT_DIR to your Cobalt api/ folder)
   3. Ask your agent about a video link — the skill takes it from there.`);

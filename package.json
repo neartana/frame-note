@@ -13,6 +13,7 @@
   "files": [
     "bin/install.js",
     "scripts/watch_video.py",
+    "scripts/ig_nologin_fetch.py",
     "SKILL.md",
     "README.md",
     "LICENSE"

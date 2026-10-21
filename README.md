@@ -60,6 +60,13 @@ python3 scripts/watch_video.py get 'https://www.instagram.com/reel/…' --max-fr
 python3 scripts/watch_video.py finalize <workdir>
 ```
 
+> **Instagram handed back a photo instead of the video?** Some reels serve
+> no video URL to logged-out fetchers, so Cobalt returns the cover photo.
+> For those, FrameNote falls back to a **no-login headless fetch**:
+> `scripts/ig_nologin_fetch.py` loads the reel in headless Chrome/Chromium,
+> extracts the real MP4 URL from the rendered page, and hands the file to
+> the normal flow above. No Instagram account or cookie involved.
+
 Every run produces a note like this:
 
 ```md
@@ -84,8 +91,9 @@ MeikiPop — visible at 0.0s
 | ---- | --- | ----- |
 | Python 3.8+ | runs `watch_video.py` | stdlib only — no pip packages needed |
 | `ffmpeg` + `ffprobe` | frame extraction, duration probing | `brew install ffmpeg` / `apt install ffmpeg` |
-| Node 18+ | runs the Cobalt server | only needed for URL downloads |
+| Node 18+ | runs the Cobalt server | only needed for URL downloads; the no-login fallback's browser step wants Node 22+ (built-in WebSocket client) |
 | Cobalt (self-hosted) | turns page links into direct video URLs | `imputnet/cobalt` — the public `api.cobalt.tools` now requires a JWT |
+| Chrome / Chromium | the no-login Instagram fallback only | any recent build; set `CHROME_PATH` if it isn't on `PATH` |
 
 The script looks for Cobalt source at `~/workspace/tools/cobalt-src/api` and
 serves it at `http://localhost:9000/`, auto-starting it if it's down.
@@ -101,6 +109,8 @@ on a fresh install.
 | `FRAMENOTE_HOME` | `~/workspace/frame-note` | runs/ + notes/ library root |
 | `FRAMENOTE_COBALT_DIR` | `~/workspace/tools/cobalt-src/api` | Cobalt API source dir |
 | `FRAMENOTE_COBALT_URL` | `http://localhost:9000/` | Cobalt API endpoint |
+| `CHROME_PATH` | first Chrome/Chromium on `PATH` | Chrome binary used by the no-login fallback |
+| `FRAMENOTE_EGRESS_PROXY` | derived from `http_proxy` / `https_proxy` | upstream proxy for the fallback's local relay — only relevant in proxied environments |
 
 Notes library: `$FRAMENOTE_HOME/notes/*.md` — permanent.
 Temporary runs: `$FRAMENOTE_HOME/runs/run-<timestamp>/` — deleted on finalize.
@@ -118,7 +128,8 @@ Temporary runs: `$FRAMENOTE_HOME/runs/run-<timestamp>/` — deleted on finalize.
 **Not**
 - Audio-only content (frames ≠ watching; the skill says so honestly)
 - Cobalt-unsupported links — the error is reported plainly, then the
-  fallback chain is: platform connector → live browser → ask for the file
+  fallback chain is: no-login headless fetch (Instagram reels Cobalt only
+  answers with a photo) → platform connector → live browser → ask for the file
 
 ## 📄 License
 
