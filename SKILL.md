@@ -72,6 +72,17 @@ finalizing.
 
 ## Failures and fallbacks
 
+- **Instagram reel where Cobalt returns a photo / no video** (it answers with
+  an image filename like `instagram_<id>.jpg`, or the script reports "cobalt
+  returned a photo, not a video"): Instagram is withholding the video URL from
+  logged-out fetchers for that specific post. Do NOT ask for the user's
+  Instagram login/cookie. Use the no-login headless fetch instead:
+  `python3 <skill-dir>/scripts/ig_nologin_fetch.py '<url>' /tmp/reel.mp4`
+  It loads the reel logged out in headless Chromium, extracts the progressive
+  MP4 URL via CDP, downloads it and ffprobe-verifies it. Then run
+  `watch_video.py get /tmp/reel.mp4` and continue the normal flow (note in
+  analysis.md that the file came via the no-login fallback). If it exits
+  non-zero, continue to the fallbacks below.
 - Cobalt error / unsupported link: report the cobalt error code plainly.
   Fall back to, in order: the platform connector (cover frame / thumbnail
   only, say so), a live browser task, or ask the user to send the video

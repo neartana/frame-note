@@ -85,6 +85,11 @@ def cobalt_fetch(url: str) -> str:
             raise RuntimeError(f"cobalt HTTP {e.code}")
     status = data.get("status")
     if status in ("tunnel", "redirect"):
+        filename = data.get("filename", "")
+        if filename.rsplit(".", 1)[-1].lower() in ("jpg", "jpeg", "png", "webp", "gif"):
+            raise RuntimeError(
+                f"cobalt returned a photo, not a video ({filename}) - the "
+                "service served no video URL for this post (logged-out fetch)")
         return data["url"]
     if status == "picker":
         for item in data.get("picker", []):
@@ -98,8 +103,10 @@ def cobalt_fetch(url: str) -> str:
 
 def download(media_url: str, dest: Path) -> None:
     r = sh(["curl", "-sL", "--fail", "--max-time", "300", "-o", str(dest), media_url])
-    if r.returncode != 0 or not dest.exists() or dest.stat().st_size == 0:
-        raise RuntimeError(f"media download failed (curl exit {r.returncode})")
+    size = dest.stat().st_size if dest.exists() else -1
+    if r.returncode != 0 or size <= 0:
+        raise RuntimeError(
+            f"media download failed (curl exit {r.returncode}, {size} bytes written)")
 
 
 def probe_duration(video: Path) -> float:
@@ -107,7 +114,12 @@ def probe_duration(video: Path) -> float:
             "-of", "json", str(video)])
     if r.returncode != 0:
         raise RuntimeError(f"ffprobe failed: {r.stderr.strip()[:200]}")
-    return float(json.loads(r.stdout)["format"]["duration"])
+    duration = json.loads(r.stdout).get("format", {}).get("duration")
+    if duration is None:
+        raise RuntimeError(
+            "ffprobe found no duration - downloaded file is not a playable "
+            f"video ({video.stat().st_size} bytes)")
+    return float(duration)
 
 
 def do_get(args) -> int:
